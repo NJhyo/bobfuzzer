@@ -237,14 +237,14 @@ bit 커버리지가 늘었으면 종료 아니면 fuzzing 단계로.
 
 
 
-위의 단계에서 crash도 많이 나온다.
+위의 스테이지 : havoc 단계에서도 crash도 많이 나온다.
 하단의 이미지를 보면 havoc stage 인 상태의 Crash를 확인할 수 있다.
 
 ![bitmap](./img/havoc_stage.png)
 
 
 
-드디어 추가된 fsfuzz_stage 시작!!!
+드디어 추가된 fsfuzz_stage 시작!!! (스테이지 : fs-havoc-mutate)
 1. havoc class 초기화
 2. 외부 Mutator 호출하여 mutate 실행한 뒤 Random으로 Syscall 변형.
 3. common_fuzz_stuff()실행 - 타겟을 실행하여 일반적인 퍼징결과물인지 crash 인지 판별.
