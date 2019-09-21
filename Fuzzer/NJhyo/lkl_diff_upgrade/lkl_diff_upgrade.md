@@ -120,7 +120,7 @@ LKL의 kernel 설정 파일
 
 기존의 LKL에 비해 많은 부분이 바뀐거 같지만 소스 수준에서 바뀐 부분은 크지않아 보인다. 
 많이 변경된 부분은 lkl\tools\lkl\lib\hijack\init.c과 lkl\tools\lkl\lib\config.c 등 주로 lkl\tools\lkl 내부의 파일들이 많이 변경된것을 알 수 있고,
-![bitmap](./img/gitlkl.PNG)
+![bitmap](./img/gitlkl.png)
 사진에서 보듯이 실제 lkl을 빌드하는 부분도 tools\lkl이다.
 
 이미 lkl-hydra가 있고, janus를 기반으로하여 업그레이드 시킨것이기 때문에 Makefile만 변경함으로 lkl5.0 버전으로 업그레이드가 가능하다.

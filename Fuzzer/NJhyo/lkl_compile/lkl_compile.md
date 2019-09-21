@@ -8,7 +8,7 @@ apt install llvm clang
 ****
 ## ff-gcc 컴파일
 ff-gcc를 컴파일하면 시작부터 에러가 뜬다.
-![bitmap](./img/fferr.PNG)
+![bitmap](./img/fferr.png)
 
 apt-get install libboost-dev 설치
 ****
@@ -24,12 +24,12 @@ lkl공식 git에 있는 build방법에 따라 라이브러리를 설치해준다
 apt-get install libfuse-dev libarchive-dev xfsprogs
 
 ./compile -t btrfs -c 명령으로 컴파일을 진행하면 아래 처럼
-![bitmap](./img/lklerr.PNG)
+![bitmap](./img/lklerr.png)
 
 bison과 flex를 찾을수 없다고 나온다. 그럼 설치해주자
 apt-get install bison flex
 다시 ./compile -t btrfs -c 명령을 통해 컴파일을 진행하면 경고 메시지가 왕창 뜨는데 clang에 옵션이 없어 발생하는 경고이므로 정상적으로 컴파일은 진행되니 무시하고 진행한다.
-![bitmap](./img/lklerr2.PNG)
+![bitmap](./img/lklerr2.png)
 
 그럼 컴파일에 실패한다.
 ```
@@ -59,7 +59,7 @@ apt-get install python-pip
 pip install xattr
 추가적으로 pathlib2 모듈도 필요하기 때문에 같이 깔아 준다.
 
-![bitmap](./img/seed.PNG)
+![bitmap](./img/seed.png)
 
 위와 같이 정상적으로 seed를 뽑을 수 있으며, 이제 corpus를 생성한다.
 prog 폴더를 만든 후
@@ -138,10 +138,10 @@ apt install libblkid-dev 후 make하면 컴파일 성공
 make 하면 성공..;
 
 # 4. fs/xfs
-![bitmap](./img/xfserr1.PNG)
+![bitmap](./img/xfserr1.png)
 
 apt-get install libtool
 apt-get install automake
-![bitmap](./img/xfserr2.PNG)
+![bitmap](./img/xfserr2.png)
 
 apt-get install autotools-dev 로 필요한 라이브러리 설치 후 make하면 컴파일 완료
