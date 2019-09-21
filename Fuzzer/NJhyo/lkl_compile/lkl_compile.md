@@ -1,4 +1,4 @@
-Janus fuzzer, LKL 컴파일 및 실행
+﻿Janus fuzzer, LKL 컴파일 및 실행
 ======================
 # 1. Janus fuzzer 컴파일
 
@@ -146,4 +146,4 @@ apt-get install automake
 
 apt-get install autotools-dev 로 필요한 라이브러리 설치 후 make하면 컴파일 완료
 
-#
+# 중요한건 btrfs말고는 동작을 하지 않는다.... 해당 부분은 현재 원인 분석 중.....
