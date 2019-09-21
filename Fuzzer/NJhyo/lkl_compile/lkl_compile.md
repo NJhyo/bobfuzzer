@@ -145,3 +145,5 @@ apt-get install automake
 ![bitmap](./img/xfserr2.png)
 
 apt-get install autotools-dev 로 필요한 라이브러리 설치 후 make하면 컴파일 완료
+
+#
