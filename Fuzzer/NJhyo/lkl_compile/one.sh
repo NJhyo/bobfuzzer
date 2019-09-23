@@ -16,7 +16,7 @@ echo "install dependencies"
 
 sudo apt update
 sudo apt upgrade -y
-sudo apt install llvm clang libboost-dev libfuse-dev libarchive-dev xfsprogs bison flex zlib1g-dev python-pip
+sudo apt install -y llvm clang libboost-dev libfuse-dev libarchive-dev xfsprogs bison flex zlib1g-dev python-pip
 
 sudo pip install xattr
 sudo pip install pathlib2
