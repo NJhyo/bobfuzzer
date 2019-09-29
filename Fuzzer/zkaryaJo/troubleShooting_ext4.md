@@ -119,3 +119,9 @@ long lkl_mount_dev(unsigned int disk_id, unsigned int part,
 
 
 
+중점적으로 봐야 할 것은 lkl을 5.0으로 포팅하면서 어떤 부분이 바뀌었는지는 모르겠지만 btrfs로 읽어오는게 문제인 거 같다. 어느 부분을 봐야 하는지는 모르겠지만 여기저기 삽질을 해봐야 할 거 같다..
+
+![bitmap](./img/troubleshooting_ext4/3.png)
+
+
+
