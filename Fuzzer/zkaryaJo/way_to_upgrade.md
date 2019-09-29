@@ -62,3 +62,8 @@ https://bugzilla.kernel.org/show_bug.cgi?id=202485
 초기 seed이미지에 특수파일들을 넣는다면 crash가 나는 부분들도 기존 JANUS와는 다른 방식으로 나오지 않을까 생각하는데...ㅠ
 
 3. 퍼저 스케쥴링 변경?
+
+스케쥴링을 변경하는 부분은 지난주 자료에 있었던 다음의 이미지와 같다.
+![bitmap](./img/way_to_upgrade/scheduling.png)
+
+이 부분에서 우리가 뭘 바꿀 수 있을지 더 좋은 쪽으로 바꿀 수 있을지 의문이 든다..;;;
