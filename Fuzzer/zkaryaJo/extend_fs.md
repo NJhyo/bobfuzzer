@@ -35,3 +35,10 @@
 ---
 
 UBIFS 를 추가하기로 했다.
+
+소스 수정 시작.
+<lkl/compile>
+```C
+supported = ['ext4', 'xfs', 'btrfs', 'f2fs', 'gfs2', 'hfsplus', 'reiserfs', 'fat', 'squashfs','ubifs']
+
+```
