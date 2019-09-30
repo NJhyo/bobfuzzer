@@ -16,10 +16,15 @@ mkfifo 로 파이프 만들어서 in out전달 ......
 
 -serial pipe:./logs/guest
 
-
-
-
 6. 실행해서 죽었다 살았다 판단을 어떻게 할 것인가?
+
+7. LKL에서의 실행 결과와 Qemu에서의 실행 결과, VM에서의 실행 결과 모두 다르다... 
+
+![bitmap](./readonly.png)
+8. 우분투 18.04 기준.... 최신버전에서 마운트 후 poc를 실행 시켜야하는데 실행이 불가능하다...? 실행권한이 없다....
+	우분투 16.04 기준 마운트 후 poc 실행까지 모두 가능하다.....
+
+
 
 qemu-system-x86_64 -kernel ./btrfs5/bzImage -chardev stdio,id=char0,mux=on,logfile=serial.log,signal=off -serial chardev:char0 -mon chardev=char0 -append "console=ttyS0 root=/dev/sda debug" -hda stretch.img -nographic -m 2G -smp 2 -s
 
