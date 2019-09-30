@@ -42,3 +42,5 @@ UBIFS 를 추가하기로 했다.
 supported = ['ext4', 'xfs', 'btrfs', 'f2fs', 'gfs2', 'hfsplus', 'reiserfs', 'fat', 'squashfs','ubifs']
 
 ```
+
+하다보니 UBIFS의 metaData와 블럭구조에 대해 알아야 할 필요가 느껴졌다...
