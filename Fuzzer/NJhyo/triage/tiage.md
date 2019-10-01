@@ -28,6 +28,10 @@ mkfifo 로 파이프 만들어서 in out전달 ......
 8-1. 실행파일(ELF)에 대한 실행을 막는거 같다.
       readonly인데 syscall을 통한 파일정보 수정이 가능할까?? => 잠시후 테스트
       if syscall은 먹힌다면 poc의 경로만 수정해주면 실행이 가능하지 않을까..? => 밥먹고 테스트...
+      
+     주로 시스템콜이 파일의 정보를 수정하는 형태로 이루어져있다. 경로 poc에서 경로 설정만 잘 진행하면 될거같다.
+     
+     
 
 qemu-system-x86_64 -kernel ./btrfs5/bzImage -chardev stdio,id=char0,mux=on,logfile=serial.log,signal=off -serial chardev:char0 -mon chardev=char0 -append "console=ttyS0 root=/dev/sda debug" -hda stretch.img -nographic -m 2G -smp 2 -s
 
