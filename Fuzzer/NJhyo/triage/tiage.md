@@ -2,34 +2,75 @@ Triage? 만들기?
 ======================
 # 1. 삽질의 시작
 
-퍼저를 돌려본 결과 crash가 생각보다 많이 터진다. 
-문제는 해당 crash가 어떤 crash인지 직접 돌려보기 전까지는 알 수가 없다는 점
-따라서 자동으로 crash를 qemu에 붙여서 이미지를 마운트 시킨 후 dmesg를 추출하여 분류하는 작업을 시작한다. 두둥.
+![bitmap](./img/hash.PNG)
 
-방법론? 또는 필요하다고 생각되는 건
-1. qemu  
-2. qemu로 돌릴 root filesystem => [**syzkaller**](https://github.com/google/syzkaller/blob/master/tools/create-image.sh)꺼 사용 [Solve]
-3. crash img 를 어떻게 root filesystem에 넣을 것인가? => root filesystem Host PC에 마운트 시켜서 파일 넣고 언마운트 [Solve]
-4. qemu에서 crash난 이미지를 어떻게 실행 시킬것인가? => qemu 돌려서 자동으로 실행 시키자?!
-5. qemu에서 나온 dmesg를 어떻게 수집 할 것인가? => -chardev stdio,id=char0,mux=on,logfile=serial.log,signal=off -serial chardev:char0 -mon chardev=char0 => 옵션 추가시 터미널로 상호 작용 하면서 파일로 로그 기록 가능!
-mkfifo 로 파이프 만들어서 in out전달 ......
+서버에서 LKL 5.0 기준으로 퍼징을 돌린 btrfs 파일 시스템의 crash파일을 모두 모아 혹시 모를 중복을 제거하기 위해 hash값을 기반으로 중복검사를 하니 병렬로 퍼징을 돌려서 그런지 생각보다 중복이 쫌 있어, 중복되는 파일을 제거하고 난 이후의 crash 개수는 
 
--serial pipe:./logs/guest
+![bitmap](./img/crash_count.PNG)
 
-6. 실행해서 죽었다 살았다 판단을 어떻게 할 것인가?
+3550개 무려 3550개...
 
-7. LKL에서의 실행 결과와 Qemu에서의 실행 결과, VM에서의 실행 결과 모두 다르다... 
+수작업으로 분류하기에는 힘들거 같고, crash내역을 보고 분석을 진행하니... 실제 환경에서 dmesg나 KASAN Report를 뽑는게 좋을거 같은데...
+어째든 자동화를 시켜보고자 한다.
 
-![bitmap](./readonly.png)
-8. 우분투 18.04 기준.... 최신버전에서 마운트 후 poc를 실행 시켜야하는데 실행이 불가능하다...? 실행권한이 없다....
-	우분투 16.04 기준 마운트 후 poc 실행까지 모두 가능하다.....
+사용할 방법은 LKL과 QEMU, VM이 후보 순위다. 다만 LKL의 경우 자세한 내역이 출력되지 않고, KASAN을 어떻게 붙여야 할지 의문이다... JANUS논문을 확인했을때는 LKL에 KASAN을 붙이기 위해 소스를 수정하면 된다는데... [**LKL issues**](https://github.com/lkl/linux/issues/463) LKL 제작에 참여한 사람도 시도해본적 없다고하고... 실제로 KASAN을 붙이기 위해 LKL 빌드전 config 파일을 바꿔봐도 어떻게 설정했는지 의문이다. <= 이부분은 쫌더 확인을 해봐야겠다.
 
+따라서 LKL과, VM을 통한 작업 진행보다는 QEMU를 통해서 자동화 시켜볼 생각이다. 
 
+현재 생각은 crash 파일을 바탕으로 img와 poc를 생성 시키고, QEMU에 실행 전 rootfs에 넣은 뒤 QEMU를 실행 시켜 부팅 시킨 뒤 tmp.img와 poc를 실행 시킨 후 나온 dmesg와 KASN Report를 수집하면 될거 같다.
 
-qemu-system-x86_64 -kernel ./btrfs5/bzImage -chardev stdio,id=char0,mux=on,logfile=serial.log,signal=off -serial chardev:char0 -mon chardev=char0 -append "console=ttyS0 root=/dev/sda debug" -hda stretch.img -nographic -m 2G -smp 2 -s
+QEMU를 통해 실행 시킬 경우 QEMU 가상 머신과 I/O작업을 진행해야하는데... 기본은 stdio이다. 
+즉 터미널을 통해서 출력하고, 입력을 받는데 지금 필요한 작업은 터미널이 아닌, Background 작업이 필요하다. 
+이래 저래 찾다기 [**Input/output through a named pipe (file)**](https://fadeevab.com/how-to-setup-qemu-output-to-console-and-automate-using-shell-script/)이라는 기능을 찾았고, 실제 동작 시켜보니 제대로 돌아가는것을 확인했으며, 터미널에서 출력되는 내용을 파일라 주고 받고 명령도 실행 시킬 수 있는 방법을 찾았다.
 
+Crash 파일을 img와 poc로 변경하는 건 janus에서 만들어둔 afl-parse를 사용하여 제작하면 되는것이고...
 
-qemu 실행시 부팅까지 약 45초 소요
+KASAN을 붙인 커널의 경우 부팅 속도가 상당히 느리다... 약 300초 정도..??
+부팅에 300초 잡고, 실행하고 결과보는데까지 넉넉잡아 50초 정도 잡으면... 350초 
+'''
+3550*350 = 1,242,500‬
+1,242,500‬ / 3600 = 345
+345/24 = 14일 하고 9시간....
+'''
+한번 돌면 14일을 꼬박 돌려야 3550개를 처리할 수 있다. 
+시간 줄이는건 차후에 생각해보고...
+
+crash 분류에 앞서 한 100개 넘개 직접 VM에 마운트를 시켜봤는데....
+
+mount 파트
+'''
+1. mount 시 터짐
+2. mount 성공
+3. mount 시 error
+4. 여러번 mount 시도 시 터짐
+5. 여러번 mount 시도 시 마운트 성공
+'''
+poc 파트
+'''
+6. poc 실행 시 터짐
+7. poc 여러번 실행 시 터짐
+8. poc 오류
+9. poc 실행 후 이상 무
+'''
+umount 파트
+'''
+10. umount시 터짐
+11. umount시 이상 무
+12. Etc....
+'''
+약 11개 정도로 나눌수 있을거 같다. 사실 더 많은 케이스가 존재한다... 이것도 대표적으로만 뽑은거라....
+예를 들어 mount성공했는데 약간의 시간이 지난 후 터진다던가.... 
+mount 성공하고 poc돌렸는데 역시 약간의 시간이 지나고 터진다거나.... 등등... 여러가지 알 수 없는 케이스가 더 존재한다.
+
+다음 고민은 Panic이 난것과 나지 않은것(생존한것), 에러가 터진것 등을 어떻게 구분할 것인가 라는 문제가 존재한다.
+panic의 경우는 확실히 구분이 가능하다.
+Kernel panic 이라는 문자열만 검사하면 확인이 가능한데, panic이 안난것의 경우 어떻게 구분할 건지 문제 사항이 있다. 
+예를 들어 마운트는 성공했는데 난데없이 KASAN Report가 뜨고 아무 이상이 없다던지...
+error의 구분은 어떻게 할것인가 등... 아직 생각할건 많은거 같다...
+
+프로세스를 죽일때는 간단히 아래와 같이 process를 죽여버리면 될 일이고.. 우선은 case by case로 나눠서 생각해봐야겠다.
+
+killall -9 qemu-system-x86_64 
 
 
 
