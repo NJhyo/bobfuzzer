@@ -1,15 +1,15 @@
 JANUS 는 forkserver, coverage bitmap, test-case scheduling algorithm 을 포함한 기본 구조가 AFL과 동일하다고 한다.
 
-![bitmap](./img/scheduling_algorithm.png)
+![bitmap](../img/understand_JANUS/scheduling_algorithm.png)
 
 
 그렇다면 AFL을 확인하고 AFL과 바뀐 부분을 중점적으로 살펴보자.
 다음은 AFL의 mutation 연산자들이다.
-![bitmap](./img/AFL_mutation_operator.png)
+![bitmap](../img/understand_JANUS/AFL_mutation_operator.png)
 
 
 다음은 AFL의 mutation 스케쥴링 구조이다.
-![bitmap](./img/AFL_mutation_scheduling.png)
+![bitmap](../img/understand_JANUS/AFL_mutation_scheduling.png)
 
 상단의 그림을 보면 
 
@@ -240,7 +240,7 @@ bit 커버리지가 늘었으면 종료 아니면 fuzzing 단계로.
 위의 스테이지 : havoc 단계에서도 crash도 많이 나온다.
 하단의 이미지를 보면 havoc stage 인 상태의 Crash를 확인할 수 있다.
 
-![bitmap](./img/havoc_stage.png)
+![bitmap](../img/understand_JANUS/havoc_stage.png)
 
 
 
