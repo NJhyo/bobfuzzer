@@ -9,7 +9,8 @@ ubifs -> *ubi 모듈을 사용
 **MTD -> nandsim 을 사용
 
 ***
-```sudo modprobe nandsim total_size=32768			//nandsim 모듈 로드
+```
+sudo modprobe nandsim total_size=32768			//nandsim 모듈 로드
 cat /proc/mtd							//mtd 확인
 sudo modprobe ubi mtd=0						//mtd0에 ubi모듈 추가
 sudo ubimkvol /dev/ubi0 -N rootfs -s 10MiB			//volume 생성
