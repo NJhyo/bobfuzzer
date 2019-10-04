@@ -194,7 +194,7 @@ $(OUTPUT)combined-consistency: $(OUTPUT)combined-consistency-in.o $(OUTPUT)Image
     $(QUIET_LINK)$(CXX) $(LDFLAGS) $(LDFLAGS_$*-y) -o $@ $^ $(LDLIBS) $(LDLIBS_$*-y)
 ```
 
-이후 Target 파일을 수정함으로 써 lkl버전을 올릴 수 있다.
+이후 Targets 파일을 수정함으로 써 lkl버전을 올릴 수 있다.
 ```C
 libs-y += lib/liblkl
 
