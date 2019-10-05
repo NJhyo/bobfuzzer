@@ -42,5 +42,7 @@ df 								                          //마운트 확인
 ***
 
 마운트 해제
+```
 sudo umount ~/ubifs
 sudo rmmod ubifs ubi nandsim
+```
