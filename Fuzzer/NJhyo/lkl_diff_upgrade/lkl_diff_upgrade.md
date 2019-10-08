@@ -194,23 +194,23 @@ $(OUTPUT)combined-consistency: $(OUTPUT)combined-consistency-in.o $(OUTPUT)Image
     $(QUIET_LINK)$(CXX) $(LDFLAGS) $(LDFLAGS_$*-y) -o $@ $^ $(LDLIBS) $(LDLIBS_$*-y)
 ```
 
-이후 Target 파일을 수정함으로 써 lkl버전을 올릴 수 있다.
+이후 Targets 파일을 수정함으로 써 lkl버전을 올릴 수 있다.
 ```C
 libs-y += lib/liblkl
 
-ifneq ($(LKL_HOST_CONFIG_BSD),y)
-libs-$(LKL_HOST_CONFIG_POSIX) += lib/hijack/liblkl-hijack
-endif
-LDFLAGS_lib/hijack/liblkl-hijack-y += -shared -nodefaultlibs
-LDLIBS_lib/hijack/liblkl-hijack-y += -ldl
-LDLIBS_lib/hijack/liblkl-hijack-$(LKL_HOST_CONFIG_ANDROID) += -lgcc -lc
+#ifneq ($(LKL_HOST_CONFIG_BSD),y)
+#libs-$(LKL_HOST_CONFIG_POSIX) += lib/hijack/liblkl-hijack
+#endif
+#LDFLAGS_lib/hijack/liblkl-hijack-y += -shared -nodefaultlibs
+#LDLIBS_lib/hijack/liblkl-hijack-y += -ldl
+#LDLIBS_lib/hijack/liblkl-hijack-$(LKL_HOST_CONFIG_ANDROID) += -lgcc -lc
 
-progs-$(LKL_HOST_CONFIG_FUSE) += lklfuse
-LDLIBS_lklfuse-y := -lfuse
+#progs-$(LKL_HOST_CONFIG_FUSE) += lklfuse
+#LDLIBS_lklfuse-y := -lfuse
 
-progs-$(LKL_HOST_CONFIG_ARCHIVE) += fs2tar
-LDLIBS_fs2tar-y := -larchive
-LDLIBS_fs2tar-$(LKL_HOST_CONFIG_NEEDS_LARGP) += -largp
+#progs-$(LKL_HOST_CONFIG_ARCHIVE) += fs2tar
+#LDLIBS_fs2tar-y := -larchive
+#LDLIBS_fs2tar-$(LKL_HOST_CONFIG_NEEDS_LARGP) += -largp
 
 progs-y += fsfuzz
 LDLIBS_fsfuzz-y := -larchive
@@ -224,9 +224,9 @@ progs-y += combined
 LDLIBS_combined-y := -larchive
 LDLIBS_combined-$(LKL_HOST_CONFIG_NEEDS_LARGP) += -largp
 
-progs-$(LKL_HOST_CONFIG_ARCHIVE) += cptofs
-LDLIBS_cptofs-y := -larchive
-LDLIBS_cptofs-$(LKL_HOST_CONFIG_NEEDS_LARGP) += -largp
+#progs-$(LKL_HOST_CONFIG_ARCHIVE) += cptofs
+#LDLIBS_cptofs-y := -larchive
+#LDLIBS_cptofs-$(LKL_HOST_CONFIG_NEEDS_LARGP) += -largp
 
 progs-y += tests/boot
 progs-y += tests/disk

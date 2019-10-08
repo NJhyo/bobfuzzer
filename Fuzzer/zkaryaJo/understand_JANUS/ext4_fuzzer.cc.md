@@ -121,7 +121,7 @@ static errcode_t find_metadata_blocks(ext2_filsys fs, struct find_block *fb)
 
 1) 블록 비트맵은 해당 블록이 사용중인지 아닌지 비트맵으로 표현한 것.
 2) 아이노드 비트맵은 해당 아이노드가 사용중인지 아닌지 비트맵으로 표현한 것.
-![bitmap](./img/bitmap.png)
+![bitmap](../img/understand_JANUS/bitmap.png)
 
 
 ```C
