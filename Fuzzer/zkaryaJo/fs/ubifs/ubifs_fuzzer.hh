@@ -23,11 +23,14 @@ static class ubifs_fuzzer: public fsfuzzer
       void ubifs_parse_mstNode(ubifs_mst_node *mst);
       void ubifs_parse_LPT(ubifs_mst_node *mst);
       void ubifs_parse_rootTree(ubifs_mst_node *mst, ubifs_idx_node *idx);
+      void ubifs_parse_branch(ubifs_branch* branch);
 
       void print_superblock(ubifs_sb_node *sb);
       void print_masternode(ubifs_mst_node *mst);
       void print_metadata();
       void print_rootTree(ubifs_idx_node *idx);
+
+
 
     private:
     std::set<uint64_t> metadata_blocks;

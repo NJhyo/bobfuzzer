@@ -52,55 +52,11 @@ void ubifs_fuzzer::ubifs_parse_LPT(ubifs_mst_node *mst) {
 
   this->metadata_blocks.insert(offset);
 
-//  memcpy(buf, (uint8_t*)image_buffer_ + offset, sizeof(buf));
-
-
 //2. find rootTree by LPT
 
-  /*uint64_t offset = UBIFS_LEB_SIZE;
-  uint64_t LEB_CNT = sb.leb_cnt;
-
-  uint64_t LPT_LEB = sb->lpt_lebs
-
-  for(int i=3;i<LEB_CNT;i++){
-  
-  offset = i*UBIFS_LEB_SIZE;
-
-  struct ubifs_ch *ch = (ubifs_ch*)((uint8_t*)image_buffer_ + offset); // 
-  
-  if(ch.node_type)
-
-  this->metadata_blocks.insert(node_paddr);
-
-  memcpy(ch, (uint8_t*)image_buffer_ + offset, CH_NODE_SIZE);
-  }
-
-   this->metadata_blocks.insert(offset);*/
 
 }
 
-/*
- *  rootTree Parsing
- */
-void ubifs_fuzzer::ubifs_parse_rootTree(ubifs_mst_node *mst, ubifs_idx_node *idx) {
-
-  //1. find rootIndexNode with mst?
-  uint64_t ROOT_LNUM = mst->root_lnum;
-  uint64_t ROOT_OFFS = mst->root_offs;
-  uint64_t ROOT_LEN = mst->root_len;
-  uint64_t offset = ROOT_LNUM*UBIFS_LEB_SIZE+ROOT_OFFS; // reached mst > idx
-
-  memcpy(idx, (uint8_t*)image_buffer_ + offset, ROOT_LEN);
-
-  this->metadata_blocks.insert(offset);
-
-/**
- * struct ubifs_branch - key/reference/length branch
- * @lnum: LEB number of the target node
- * @offs: offset within @lnum
- * @len: target node length
- * @key: key
- */
 // typedef struct {
 //   uint32_t lnum;
 //   uint32_t offs;
@@ -108,42 +64,96 @@ void ubifs_fuzzer::ubifs_parse_rootTree(ubifs_mst_node *mst, ubifs_idx_node *idx
 //   uint8_t key[];
 // } __attribute__((packed)) ubifs_branch;
 
-    //we can find idx + offset = branches address
-    offset += 28; //reached at mst > idx > branches's start
+void ubifs_fuzzer::ubifs_parse_branch(ubifs_branch* branch){
+  
+  uint64_t branch_lnum = branch->lnum;
+  uint64_t branch_offset = branch->offs;
+  uint64_t branch_len = branch->len;
+  uint64_t offset = branch_lnum*UBIFS_LEB_SIZE+branch_offset; // 
 
-    this->metadata_blocks.insert(offset);
+  uint64_t branch_count = (branch_len-28)/20;  
 
-    ubifs_branch *root = (ubifs_branch*)malloc(sizeof(ubifs_branch));
+  printf("branch_count : %d\n", branch_count);
 
-    memcpy(root, (uint8_t*)image_buffer_ + offset, sizeof(ubifs_branch));
+  for(int i=0; i<branch_count; i++){
 
-    printf("==================\n");
-    printf("root : lnum : %lld\n", root->lnum);
-    printf("root : offs : %lld\n", root->offs);
-    printf("root : len : %lld\n", root->len);
-    printf("root : key : %lld\n, %d", root->key, sizeof(root->key));
-    printf("==================\n");
+    ubifs_idx_node *idxNode = (ubifs_idx_node*)malloc(sizeof(ubifs_idx_node));
+    memcpy(idxNode, (uint8_t*)image_buffer_ + offset, sizeof(ubifs_idx_node));
 
+    if(idxNode->ch.node_type == UBIFS_IDX_NODE){
+      this->metadata_blocks.insert(offset); 
 
+    }
 
-    offset += sizeof(root);
+    if(idxNode->child_cnt == 0){
+      // do nothing
+    }else{ // child_cnt >0
 
-    this->metadata_blocks.insert(offset);
+      for(int j=0; j < idxNode->child_cnt; j++){
+
+        ubifs_branch *brch = (ubifs_branch*)malloc(sizeof(ubifs_branch));
+        
+        if(j==0)
+          offset += 28;   //commonHeader(24)+cild_cnt(2)+level(2)
+        else
+          offset += 20;   //(branch length)
+        
+        this->metadata_blocks.insert(offset); 
+        memcpy(brch, (uint8_t*)image_buffer_ + offset, sizeof(ubifs_branch));
+        // printf("======= ubifs_parse_branch ===========\n");
+        // printf("brch %d : lnum : %lld\n", j, brch->lnum);
+        // printf("brch %d : offs : %lld\n", j, brch->offs);
+        // printf("brch %d : len  : %lld\n", j, brch->len);
+        // printf("======================================\n");
+        ubifs_parse_branch(brch);
+      }
+    }
+
+  }
+}
+
+/*
+ *  rootTree Parsing
+ */
+void ubifs_fuzzer::ubifs_parse_rootTree(ubifs_mst_node *mst, ubifs_idx_node *idx) {
+
+  //1. find root with mst  
+  uint64_t ROOT_LNUM = mst->root_lnum;
+  uint64_t ROOT_OFFS = mst->root_offs;
+  uint64_t ROOT_LEN = mst->root_len;
+  uint64_t offset = ROOT_LNUM*UBIFS_LEB_SIZE+ROOT_OFFS; // reached mst > idx
+
+  memcpy(idx, (uint8_t*)image_buffer_ + offset, ROOT_LEN);
+
+  this->metadata_blocks.insert(offset); //reached at mst > idx > branches's start
+  
+  //1. rootIndexNode = ubifs_idx_node
+  ubifs_idx_node *root = (ubifs_idx_node*)malloc(sizeof(ubifs_idx_node));
+  memcpy(root, (uint8_t*)image_buffer_ + offset, sizeof(ubifs_idx_node));
+
+  //printf("========= print ubifs_parse_rootTree root->child_cnt: %d =========\n",root->child_cnt);
+
+  for(int i=0; i < root->child_cnt; i++){
     
-    ubifs_branch *root2 = (ubifs_branch*)malloc(sizeof(ubifs_branch));
+    ubifs_branch *brch = (ubifs_branch*)malloc(sizeof(ubifs_branch));
 
-    memcpy(root2, (uint8_t*)image_buffer_ + offset, sizeof(ubifs_branch));
+    if(i == 0)
+      offset += 28;   //branches
+    else
+      offset += 20;
+    
+    this->metadata_blocks.insert(offset); 
+    memcpy(brch, (uint8_t*)image_buffer_ + offset, sizeof(ubifs_branch));
 
-    printf("==================\n");
-    printf("root2 : lnum : %lld\n", root2->lnum);
-    printf("root2 : offs : %lld\n", root2->offs);
-    printf("root2 : len : %lld\n", root2->len);
-    printf("root2 : key : %lld\n", root2->key);
-    printf("==================\n");
+    // printf("========= ubifs_parse_rootTree =========\n");
+    // printf("brch %d : lnum : %lld\n", i, brch->lnum);
+    // printf("brch %d : offs : %lld\n", i, brch->offs);
+    // printf("brch %d : len : %lld\n" , i, brch->len);
+    // printf("=========================================\n");
 
-  //2. find metaData with rootIndexNode 
-  //
+    ubifs_parse_branch(brch);
 
+  }
 // typedef struct {
 //   struct ubifs_ch ch;
 //   uint16_t child_cnt;  @child_cnt: number of child index nodes
@@ -205,10 +215,8 @@ void ubifs_fuzzer::compress(const char *in_path, void *buffer, const char *meta_
 
 
   //print_superblock(sb);
-  print_masternode(mst);
-  print_rootTree(idx);
-
-
+  //print_masternode(mst);
+  //print_rootTree(idx);
 
 
 /*  if (sb->node_size != sb->leaf_size) {
