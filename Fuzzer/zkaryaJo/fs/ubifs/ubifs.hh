@@ -41,7 +41,11 @@
 #define GB 1024ull*MB
 #define TB 1024ull*GB
 
-const uint64_t UBIFS_SUPERBLOCK_OFFSETS[] = {0};
+const uint64_t UBIFS_LEB_SIZE = 15872;
+const uint64_t MST_NODE_SIZE = 512;
+const uint64_t CH_NODE_SIZE = 24;
+
+const uint64_t UBIFS_LEB_OFFSETS[] = {15872, (15872*2), 0};
 
 /*
  * LEB Properties Tree node types.
@@ -235,19 +239,19 @@ enum {
  *
  */
 enum {
-	UBIFS_INO_NODE,
+	UBIFS_INO_NODE,  //0
 	UBIFS_DATA_NODE,
-	UBIFS_DENT_NODE,
+	UBIFS_DENT_NODE, //2
 	UBIFS_XENT_NODE,
-	UBIFS_TRUN_NODE,
+	UBIFS_TRUN_NODE, //4
 	UBIFS_PAD_NODE,
-	UBIFS_SB_NODE,
+	UBIFS_SB_NODE,   //6
 	UBIFS_MST_NODE,
-	UBIFS_REF_NODE,
+	UBIFS_REF_NODE,  //8
 	UBIFS_IDX_NODE,
-	UBIFS_CS_NODE,
+	UBIFS_CS_NODE,   //a
 	UBIFS_ORPH_NODE,
-	UBIFS_NODE_TYPES_CNT,
+	UBIFS_NODE_TYPES_CNT, //c
 };
 
 /*
