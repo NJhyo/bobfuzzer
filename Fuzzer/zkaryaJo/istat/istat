@@ -15,7 +15,7 @@ FIFO	= 0x04
 
 def mount(fstype, path, mntpoint, options=[]):
     if fstype == 'ubifs':
-        print(['sudo apt install mtd-utils'])                                # sudo apt install mtd-utils
+        #print(['sudo apt install mtd-utils'])                                # sudo apt install mtd-utils
         print(['sudo modprobe nandsim'])                                        # sudo modprobe nandsim
         print(['sudo modprobe ubi mtd=0'])                                   # sudo modprobe ubi mtd=0  
         print(['sudo ubimkvol /dev/ubi0 -N rootfs -s 10MiB'])        # sudo ubimkvol /dev/ubi0 -N rootfs -s 10MiB

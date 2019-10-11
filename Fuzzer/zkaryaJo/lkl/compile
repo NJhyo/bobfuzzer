@@ -25,11 +25,11 @@ if __name__ == '__main__':
     subprocess.check_call('make -C tools/lkl clean', shell=True)
   
   # copy config
-  subprocess.call('cp -f %s-config arch/lkl/defconfig' % args.type, shell=True)
+  #subprocess.call('cp -f %s-config arch/lkl/defconfig' % args.type, shell=True)
   
   # compile with instrumenting gcc
   dir_path = os.path.dirname(os.path.realpath(__file__))
-  subprocess.call('make -C tools/lkl -j CC="%s/../ff-gcc/ff-gcc fs/%s"' % (dir_path, args.type), shell=True)
+  subprocess.call('make -C tools/lkl CC="%s/../ff-gcc/ff-gcc fs/%s"' % (dir_path, args.type), shell=True)
 
   # copy object file
   subprocess.call('cp -f tools/lkl/fsfuzz tools/lkl/%s-fsfuzz' % args.type, shell=True)
