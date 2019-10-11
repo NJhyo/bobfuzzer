@@ -5,15 +5,13 @@
 #include "ubifs_fuzzer.hh"
 #include "utils.hh"
 
-int main(int argc, char *argv[])
-{
-
-/*
+int main(int argc, char *argv[]) {
+  
   if (argc < 4) {
     fprintf(stderr, "invalid arg\n");
     return 1;
   }
-*/
+
   if (!strcmp(argv[1], "test")) {
 /*
     const char *in_path = argv[2];
@@ -30,8 +28,6 @@ int main(int argc, char *argv[])
 
     void *image_buffer = malloc(st.st_size);
 
-    printf("start compress\n");
-
     ubifs_fuzzer.compress(in_path, image_buffer, meta_path);
 
     lstat(meta_path, &st);
@@ -43,16 +39,15 @@ int main(int argc, char *argv[])
     close(fd);
     printf("st.st_size: %d\n", st.st_size);
 
-    printf("start decompress\n");
     ubifs_fuzzer.decompress(tmp_buffer, st.st_size, false);
 
-//    ubifs_fuzzer.sync_to_file(out_path);
+    ubifs_fuzzer.sync_to_file(out_path);
 
     free(tmp_buffer);
     free(image_buffer);
 
 
-  } /*
+  } 
 else if (!strcmp(argv[1], "repro")) {
     const char *in_path = argv[2];
     const char *out_path = argv[3];
@@ -131,7 +126,7 @@ else if (!strcmp(argv[1], "repro")) {
     return 1;
   }
 
-*/
+
 
   return 0;
 }
