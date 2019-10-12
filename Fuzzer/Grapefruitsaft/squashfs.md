@@ -110,6 +110,64 @@ foo/bar
 
 ----------------------------------------
 
+### crash test
+
+### mksquash
+```
+mksquashfs ./ctest ctest4.sqsh
+Parallel mksquashfs: Using 1 processor
+Creating 4.0 filesystem on ctest4.sqsh, block size 131072.
+[===================================================================|] 5/5 100%
+
+Exportable Squashfs 4.0 filesystem, gzip compressed, data block size 131072
+	compressed data, compressed metadata, compressed fragments, compressed xattrs
+	duplicates are removed
+Filesystem size 4.05 Kbytes (0.00 Mbytes)
+	22.90% of uncompressed filesystem size (17.71 Kbytes)
+Inode table size 162 bytes (0.16 Kbytes)
+	42.52% of uncompressed inode table size (381 bytes)
+Directory table size 125 bytes (0.12 Kbytes)
+	73.96% of uncompressed directory table size (169 bytes)
+Number of duplicate files found 3
+Number of inodes 12
+Number of files 7
+Number of fragments 1
+Number of symbolic links  1
+Number of device nodes 0
+Number of fifo nodes 1
+Number of socket nodes 0
+Number of directories 3
+Number of ids (unique uids + gids) 2
+Number of uids 2
+	root (0)
+	grapefruit (1000)
+Number of gids 2
+	root (0)
+	grapefruit (1000)
+```
+
+### squashfs format
+----------------------
+ref. https://dr-emann.github.io/squashfs/#superblock
+https://www.kernel.org/doc/Documentation/filesystems/squashfs.txt
+
+#### - superblock
+
+block_size = 2^block_log // checksum 처럼 작용
+
+<sup>If block_size and block_log do not agree, the archive is considered corrupt</sup>
+
+#### - sanity check for super block contents
+unsquashfs. unsquash-4.c
+```cpp
+squashfs_operations *read_filesystem_tables_4()
+```
+
+** sanity check 확인 중
+
+
+
+
 ##### TODO
 - squashfs_fuzzer files
 - study fs structures
