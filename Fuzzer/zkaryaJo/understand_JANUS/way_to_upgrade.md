@@ -35,14 +35,14 @@ sys_futimesat
 ```
 EXT4 부터 살펴보면, 하단의 이미지에서 lost+found는 ext4에서 기본적으로 손상되거나 알수없는 파일들의 정보가 보관되는 곳이라고 한다. 이건 파일시스템 별로 있을 수 있으므로 상관이 없을 것 같다.
 
-![bitmap](./img/way_to_upgrade/ext4_1.png)
+![bitmap](../img/way_to_upgrade/ext4_1.png)
 
 그럼 foo 디렉토리를 살펴보자. 다음과 같이 6개의 파일들이 존재한다.
-![bitmap](./img/way_to_upgrade/ext4_2.png)
+![bitmap](../img/way_to_upgrade/ext4_2.png)
 
 
 파일의 형식은 다음의 이미지에 있는 사진과 같다. 
-![bitmap](./img/way_to_upgrade/ext4_3.png)
+![bitmap](../img/way_to_upgrade/ext4_3.png)
 
 
 여기서 추가하거나 바꿀 수 있는 부분이 있을까 생각해보며 자료를 찾다 보니 다음과 같은 자료가 나왔다.
@@ -50,12 +50,12 @@ EXT4 부터 살펴보면, 하단의 이미지에서 lost+found는 ext4에서 기
 https://bugzilla.kernel.org/show_bug.cgi?id=202485
 
 다음의 링크를 들어가서 구글번역기로 좀 더 편하게 보면 
-![bitmap](./img/way_to_upgrade/seed_upg_1.png)
-![bitmap](./img/way_to_upgrade/seed_upg_3.png)
+![bitmap](../img/way_to_upgrade/seed_upg_1.png)
+![bitmap](../img/way_to_upgrade/seed_upg_3.png)
 
 
 이에 대한 답변으로
-![bitmap](./img/way_to_upgrade/seed_upg_4.png)
+![bitmap](../img/way_to_upgrade/seed_upg_4.png)
 
 다음과 같이 달렸다.
 
