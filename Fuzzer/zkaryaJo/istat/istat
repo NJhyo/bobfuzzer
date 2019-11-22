@@ -27,14 +27,16 @@ def mount(fstype, path, mntpoint, options=[]):
         subprocess.check_call(['sudo', 'ubimkvol', '/dev/ubi0', '-N','rootfs', '-s', '10MiB'])
         subprocess.check_call(['sudo', 'ubiupdatevol', '/dev/ubi0_0', path])
         subprocess.check_call(['sudo', 'mount', '-t', 'ubifs', 'ubi0:rootfs', mntpoint])
-    #print(['sudo', 'mount', '-o', ','.join(['loop'] + options), '-t', fstype, path, mntpoint])
-    # if fstype == 'gfs2':
-    #     options += ['acl']
-    # elif fstype == 'reiserfs':
-    #     options += ['acl', 'user_xattr']
-    # print(['sudo', 'mount', '-o', ','.join(['loop'] + options), '-t', fstype, path, mntpoint])
-    # subprocess.check_call(
-    #         ['sudo', 'mount', '-o', ','.join(['loop'] + options), '-t', fstype, path, mntpoint])
+    
+    else :
+        print(['sudo', 'mount', '-o', ','.join(['loop'] + options), '-t', fstype, path, mntpoint])
+        if fstype == 'gfs2':
+            options += ['acl']
+        elif fstype == 'reiserfs':
+            options += ['acl', 'user_xattr']
+        print(['sudo', 'mount', '-o', ','.join(['loop'] + options), '-t', fstype, path, mntpoint])
+        subprocess.check_call(
+                ['sudo', 'mount', '-o', ','.join(['loop'] + options), '-t', fstype, path, mntpoint])
 
 def chown(mntpoint):
     try:
